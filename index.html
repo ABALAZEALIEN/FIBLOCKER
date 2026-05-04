@@ -127,23 +127,21 @@
         }
 
         .visual{
-            width:400px;
-            height:400px;
+            width:350px;
+            height:350px;
             border-radius:50%;
             display:flex;
             justify-content:center;
             align-items:center;
-            font-size:120px;
+            font-size:100px;
             background:rgba(255,255,255,0.03);
             border: 1px solid rgba(0, 209, 255, 0.3);
-            box-shadow:0 0 50px rgba(0, 209, 255, 0.1);
             animation:float 5s ease-in-out infinite;
-            position:relative;
         }
 
         @keyframes float{
-            0%,100%{transform:translateY(0) rotate(0deg);}
-            50%{transform:translateY(-25px) rotate(5deg);}
+            0%,100%{transform:translateY(0);}
+            50%{transform:translateY(-20px);}
         }
 
         @keyframes fadeUp{
@@ -162,37 +160,77 @@
             color:#00d1ff;
         }
 
-        .grid{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-            gap:30px;
+        /* --- SADECE BURAYI VE KARTLARI GÜNCELLEDİM --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            align-items: start; /* Kartlar yanındakini aşağı çekmesin diye */
         }
 
-        .card{
-            background:rgba(255,255,255,.02);
-            padding:35px;
-            border-radius:12px;
-            transition:.3s;
-            border:1px solid rgba(255,255,255,.05);
+        .card {
+            background: rgba(255,255,255,.02);
+            padding: 35px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
         }
 
-        .card:hover{
+        .card:hover {
             border-color: #00d1ff;
             background: rgba(0, 209, 255, 0.05);
-            transform: translateY(-10px);
         }
 
-        .card h3{
-            margin-bottom:15px;
-            color:#00d1ff;
-            font-size:22px;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .card p{
-            color:#888;
-            line-height:1.6;
+        .card h3 {
+            color: #00d1ff;
+            font-size: 22px;
+            margin: 0;
         }
 
+        .arrow {
+            color: #00d1ff;
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .card.expanded .arrow {
+            transform: rotate(90deg);
+        }
+
+        .card p {
+            margin-top: 15px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .card .details {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #888;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .card.expanded .details {
+            max-height: 300px;
+            opacity: 1;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 209, 255, 0.2);
+        }
+
+        /* --- ALT TARAF AYNI KALDI --- */
         .download{
             text-align:center;
             padding: 120px 8%;
@@ -209,7 +247,6 @@
             font-size: 15px;
             color: #666;
             font-style: italic;
-            letter-spacing: 0.5px;
         }
 
         .school-credit b {
@@ -226,9 +263,22 @@
         }
 
         @media(max-width:950px){
-            .hero{ flex-direction:column; text-align:center; padding-top: 150px;}
-            .text h1{ font-size:45px; }
-            .visual{ width:250px; height:250px; font-size:80px; }
+            .hero{
+                flex-direction:column;
+                text-align:center;
+                padding-top: 150px;
+            }
+
+            .text h1{
+                font-size:45px;
+            }
+
+            .visual{
+                margin-top:50px;
+                width:250px;
+                height:250px;
+                font-size:80px;
+            }
         }
     </style>
 </head>
@@ -245,10 +295,7 @@
 <section class="hero">
     <div class="text">
         <h1>Verilerini <span>Matematik</span> İle Mühürle</h1>
-        <p>
-            Fibonacci algoritması üzerine inşa edilmiş, yüksek güvenlikli dosya ve klasör şifreleme aracı. 
-            Hatay'da geliştirilen yerli koruma sistemiyle dijital varlıklarını güvenceye al.
-        </p>
+        <p>Fibonacci algoritması üzerine inşa edilmiş, yüksek güvenlikli dosya ve klasör şifreleme aracı.</p>
         <a href="fiblocker.exe" class="btn" download>⬇ Ücretsiz İndir</a>
     </div>
     <div class="visual">🔐</div>
@@ -257,21 +304,45 @@
 <section id="features">
     <h2 class="title">Sistem Özellikleri</h2>
     <div class="grid">
-        <div class="card">
-            <h3>⚡ Hızlı Şifreleme</h3>
-            <p>Büyük boyutlu dosyalarınızı Fibonacci dizisi tabanlı motoruyla saniyeler içinde şifreler.</p>
+        <div class="card" onclick="toggleCard(this)">
+            <div class="card-header">
+                <h3>⚡ Hızlı Şifreleme</h3>
+                <span class="arrow">➔</span>
+            </div>
+            <p>Büyük boyutlu dosyalarınızı saniyeler içinde şifreler.</p>
+            <div class="details">
+                Fibonacci dizisi tabanlı motoruyla verileri bloklar halinde işleyerek işlemciyi yormadan en yüksek hıza ulaşır.
+            </div>
         </div>
-        <div class="card">
-            <h3>🛡️ İmha Modu</h3>
-            <p>8 kez hatalı şifre girilmesi durumunda, veriyi rastgele baytlarla doldurarak kendini imha eder.</p>
+        <div class="card" onclick="toggleCard(this)">
+            <div class="card-header">
+                <h3>🛡️ İmha Modu</h3>
+                <span class="arrow">➔</span>
+            </div>
+            <p>8 kez hatalı şifre girilmesi durumunda kendini imha eder.</p>
+            <div class="details">
+                Veriyi rastgele baytlarla doldurarak brute-force saldırılarını tamamen etkisiz hale getirir.
+            </div>
         </div>
-        <div class="card">
-            <h3>👻 Hayalet Ön İzleme</h3>
-            <p>Şifreyi tamamen çözmeden dosya içeriğine güvenli bir geçici dizinde göz atmanızı sağlar.</p>
+        <div class="card" onclick="toggleCard(this)">
+            <div class="card-header">
+                <h3>👻 Hayalet Ön İzleme</h3>
+                <span class="arrow">➔</span>
+            </div>
+            <p>Şifreyi çözmeden dosya içeriğine göz atın.</p>
+            <div class="details">
+                Güvenli bir geçici dizinde dosyanın sadece bir kopyasını açar, kapattığınız an tüm izleri siler.
+            </div>
         </div>
-        <div class="card">
-            <h3>📂 Tam Destek</h3>
-            <p>Sadece dosyaları değil, tüm klasör yapısını tek bir .fib kasasında toplar.</p>
+        <div class="card" onclick="toggleCard(this)">
+            <div class="card-header">
+                <h3>📂 Tam Destek</h3>
+                <span class="arrow">➔</span>
+            </div>
+            <p>Tüm klasör yapısını tek bir .fib kasasında toplar.</p>
+            <div class="details">
+                Klasör hiyerarşisini bozmadan tüm alt dizinleri güvenle paketler ve şifreler.
+            </div>
         </div>
     </div>
 </section>
@@ -289,6 +360,22 @@
 <footer>
     HÖAL Software & Erkam © 2026 | Antakya, Hatay
 </footer>
+
+<script>
+    function toggleCard(card) {
+        const isAlreadyOpen = card.classList.contains('expanded');
+
+        // Diğerlerini kapat
+        document.querySelectorAll('.card').forEach(c => {
+            c.classList.remove('expanded');
+        });
+
+        // Tıklananı (eğer açık değilse) aç
+        if (!isAlreadyOpen) {
+            card.classList.add('expanded');
+        }
+    }
+</script>
 
 </body>
 </html>
